@@ -7,8 +7,17 @@ on:
         description: Only verify login and friends without sending
         type: boolean
         default: true
+      period:
+        description: Greeting period (morning or evening)
+        type: choice
+        options:
+          - morning
+          - evening
+        default: morning
   schedule:
-    - cron: "30 3 * * *"
+    - cron: "0 8 * * *"
+      timezone: "Asia/Shanghai"
+    - cron: "0 23 * * *"
       timezone: "Asia/Shanghai"
 
 concurrency:
@@ -38,7 +47,25 @@ jobs:
       - run: python -m playwright install --with-deps chromium
       - name: Write protected configuration
         shell: bash
-        run: printf '%s' "$DOUYIN_CONFIG" > config.json
+        env:
+          CONFIG_MORNING: ${{ secrets.DOUYIN_CONFIG_MORNING }}
+          CONFIG_EVENING: ${{ secrets.DOUYIN_CONFIG_EVENING }}
+          PERIOD: ${{ inputs.period }}
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          umask 077
+          if [[ "$PERIOD" == "evening" || "$SCHEDULE" == "0 23 * * *" ]]; then
+            selected_config="$CONFIG_EVENING"
+            echo "Using evening greeting configuration"
+          else
+            selected_config="$CONFIG_MORNING"
+            echo "Using morning greeting configuration"
+          fi
+          if [[ -z "$selected_config" ]]; then
+            echo "::error::The selected greeting configuration Secret is missing"
+            exit 1
+          fi
+          printf '%s' "$selected_config" > config.json
       - name: Write multi-account configuration
         shell: bash
         env:
