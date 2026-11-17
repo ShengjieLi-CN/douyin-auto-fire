@@ -6,7 +6,7 @@ on:
       dry_run:
         description: Only verify login and friends without sending
         type: boolean
-        default: false
+        default: true
   schedule:
     - cron: "30 3 * * *"
       timezone: "Asia/Shanghai"
@@ -17,6 +17,7 @@ concurrency:
 
 jobs:
   send:
+    if: github.event_name == 'workflow_dispatch' || vars.DOUYIN_AUTO_SEND_ENABLED == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -27,6 +28,7 @@ jobs:
       DINGTALK_WEBHOOK: ${{ secrets.DINGTALK_WEBHOOK }}
       DINGTALK_SECRET: ${{ secrets.DINGTALK_SECRET }}
       HEADLESS: "true"
+      TRACE: "false"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -118,5 +120,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: douyin-failure-${{ github.run_id }}
-          path: artifacts/
+          path: |
+            artifacts/**/run.log
+            artifacts/**/result.json
           retention-days: 3
