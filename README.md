@@ -3,7 +3,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/unmev/douyin-auto-fire?style=flat-square)](https://github.com/unmev/douyin-auto-fire/stargazers)
 ![Visitors](https://visitor-badge.laobi.icu/badge?page_id=unmev.douyin-auto-fire)
 
-> 定时自动向抖音好友发送消息，保持火花不断。基于 Playwright 模拟真实浏览器操作，可使用 GitHub Actions、云服务器或 Windows 电脑定时运行。
+> 定时自动向抖音好友发送消息，保持火花不断。基于 Playwright 模拟真实浏览器操作，可在云服务器或 Windows 电脑上定时运行。
 
 ![douyin-auto-fire-banner.svg](https://img.908988.xyz/file/教程/douyin-auto-fire/5pdab8It.svg)
 
@@ -13,17 +13,17 @@
 
 通过模拟浏览器操作，可以按照配置自动向指定好友发送文字、图片或抖音原生表情，并支持多种运行方式。
 
-如果只是想快速使用，推荐 **GitHub Actions**：不需要自己购买服务器，也不需要电脑长期保持开机。也可以部署到 Linux 云服务器，或者直接在 Windows 电脑上运行。
+此仓库的 GitHub Actions 自动发送工作流已移除。项目也可部署到 Linux 云服务器，或者直接在 Windows 电脑上运行。
 
 > ⚠️ 本项目使用 Cookie / Storage State 作为登录凭证。请只保存在安全位置，不要提交到公开仓库，也不要分享给他人。
 
 ## ✨ 已实现功能
 
-- ⏰ **定时自动发送**：支持 GitHub Actions、systemd Timer 等方式定时运行
+- ⏰ **定时自动发送**：支持 systemd Timer 和 Windows 任务计划程序
 - 💬 **多种消息类型**：支持文字、图片（PNG/JPG/GIF/WebP）和抖音原生表情
 - 🎲 **随机消息**：支持从多条候选消息中随机选择
 - 👥 **多好友支持**：可以同时为多个好友配置发送任务
-- 👤 **多账号支持**：GitHub Actions 当前最多支持 5 个抖音账号
+- 👤 **多账号支持**：可为不同抖音账号单独配置任务
 - 🧪 **Dry Run 模式**：只验证登录状态和好友定位，不真实发送消息
 - 🔒 **防重复发送**：支持记录发送历史，减少重复触发导致的重复发送
 - 🔔 **钉钉通知**：支持通过钉钉机器人接收任务结果
@@ -34,12 +34,6 @@
 ## 🚀 快速使用教程
 
 根据自己的使用场景选择一种部署方式即可：
-
-### ☁️ [GitHub Actions 部署 →](docs/github-actions.md)
-
-**推荐大多数用户使用。** 无需服务器，电脑也不需要长期在线，Fork 后配置 Secrets 即可每天自动运行。
-
-包含 Cookie 获取、配置生成、GitHub Secrets、Dry Run、定时任务、多账号和失败诊断等完整图文步骤。
 
 ### 🖥️ [云服务器部署 →](docs/server.md)
 
@@ -61,7 +55,7 @@
 | --- | --- |
 | 语言 | Python 3.11+ |
 | 浏览器自动化 | [Playwright](https://playwright.dev/python/) + Chromium |
-| 定时调度 | GitHub Actions / systemd Timer / Windows 任务计划程序 |
+| 定时调度 | systemd Timer / Windows 任务计划程序 |
 | 环境变量 | python-dotenv |
 | 时区 | tzdata |
 | 通知 | 钉钉机器人 Webhook |
